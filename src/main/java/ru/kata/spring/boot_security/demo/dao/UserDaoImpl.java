@@ -5,6 +5,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -37,5 +38,19 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void deleteUser(User user) {
         entityManager.remove(user);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        try {
+            TypedQuery<User> query = entityManager.createQuery(
+                    "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = :username",
+                    User.class
+            );
+            query.setParameter("username", username);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -13,10 +14,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDao = userDao;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -40,11 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        if (user.getId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
-        getUserById(user.getId());
-        userDao.updateUser(user);
+        User inputUser = getUserById(user.getId());
+        userDao.updateUser(inputUser);
     }
 
     @Override
@@ -54,4 +54,6 @@ public class UserServiceImpl implements UserService {
             userDao.deleteUser(user);
         }
     }
+
+
 }
