@@ -28,7 +28,7 @@ public class AdminController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new User());
-        return "admin";
+        return "user-form";
     }
 
     // GET /admin/{id} - форма редактирования пользователя
@@ -36,7 +36,7 @@ public class AdminController {
     public String showEditForm(@PathVariable Long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
-        return "admin";
+        return "user-form";
     }
 
     // POST /admin/new - создание пользователя

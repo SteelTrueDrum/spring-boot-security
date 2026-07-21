@@ -1,6 +1,5 @@
-<!--@thymesVar id="users" type="java.util.List<ru.kata.spring.boot_security.demo.model.User>"-->
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
@@ -125,6 +124,9 @@
             padding: 40px;
             color: #666;
         }
+        .inline-form {
+            display: inline;
+        }
     </style>
 </head>
 <body>
@@ -139,7 +141,6 @@
         </div>
     </div>
 
-    <!-- Информация о текущем пользователе -->
     <div class="user-info">
         <span>Welcome, <strong sec:authentication="name">User</strong>!</span>
         <span>Roles:
@@ -148,10 +149,9 @@
             </span>
     </div>
 
-    <!-- Кнопка создания нового пользователя -->
+    <!-- Кнопка создания -->
     <a href="/admin/new" class="btn btn-create">+ Create New User</a>
 
-    <!-- Таблица пользователей -->
     <table>
         <thead>
         <tr>
@@ -178,10 +178,16 @@
             </td>
             <td>
                 <div class="action-buttons">
+                    <!-- Кнопка Edit - использует GET для перехода на страницу редактирования -->
                     <a th:href="@{/admin/edit/{id}(id=${user.id})}" class="btn btn-edit">Edit</a>
-                    <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post"
-                          onsubmit="return confirm('Are you sure you want to delete this user?');">
-                        <button type="submit" class="btn btn-delete">Delete</button>
+
+                    <!-- Форма для DELETE с hidden методом -->
+                    <form th:action="@{/admin/{id}(id=${user.id})}" method="post" class="inline-form">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button type="submit" class="btn btn-delete"
+                                onclick="return confirm('Are you sure you want to delete this user?');">
+                            Delete
+                        </button>
                     </form>
                 </div>
             </td>
