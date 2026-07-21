@@ -4,10 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -22,10 +19,10 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column
@@ -118,7 +115,19 @@ public class User implements UserDetails {
                 '}';
     }
 
-// ----- Реализация UserDetails -----
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(username, user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, username);
+    }
+
+    // ----- Реализация UserDetails -----
 
     // Возвращает коллекцию прав и ролей пользователя (GrantedAuthority)
     @Override

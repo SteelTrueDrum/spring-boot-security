@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
 
 @Service
-@Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDao userDao;
 
@@ -17,13 +16,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userDao = userDao;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Username not found");
-        }
 
-        return user;
+        return userDao.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

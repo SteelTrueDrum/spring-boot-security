@@ -4,10 +4,12 @@ import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -41,16 +43,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         try {
             TypedQuery<User> query = entityManager.createQuery(
                     "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = :username",
                     User.class
             );
             query.setParameter("username", username);
-            return query.getSingleResult();
-        } catch (Exception e) {
-            return null;
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 }

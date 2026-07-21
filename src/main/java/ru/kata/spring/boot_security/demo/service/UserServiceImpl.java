@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -14,12 +15,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.saveUser(user);
     }
 
@@ -44,8 +45,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        User inputUser = getUserById(user.getId());
-        userDao.updateUser(inputUser);
+        User existingUser = getUserById(user.getId());
+
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setUsername(user.getUsername());
+
+        // Обновляем пароль, если он был изменен
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        // Обновляем роли, если они были переданы
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            existingUser.setRoles(user.getRoles());
+        }
+
+        userDao.updateUser(existingUser);
     }
 
     @Override

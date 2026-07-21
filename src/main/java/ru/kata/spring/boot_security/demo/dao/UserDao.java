@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.dao;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
     List<User> getAllUsers();
@@ -15,5 +16,5 @@ public interface UserDao {
 
     void deleteUser(User user);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 }

@@ -1,11 +1,103 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>User Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .user-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .user-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .user-info strong {
+            display: inline-block;
+            width: 100px;
+            color: #555;
+        }
+        .roles {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 2px;
+        }
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        .admin-link {
+            display: inline-block;
+            margin-top: 20px;
+            margin-right: 10px;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .admin-link:hover {
+            background: #1976D2;
+        }
+    </style>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<div class="container">
+    <h1>Welcome, <span th:text="${user.firstName}">User</span>!</h1>
 
+    <div class="user-info">
+        <h3>Your Profile Information</h3>
+        <p><strong>ID:</strong> <span th:text="${user.id}">1</span></p>
+        <p><strong>First Name:</strong> <span th:text="${user.firstName}">John</span></p>
+        <p><strong>Last Name:</strong> <span th:text="${user.lastName}">Doe</span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}">john@example.com</span></p>
+        <p><strong>Username:</strong> <span th:text="${user.username}">johndoe</span></p>
+        <p><strong>Roles:</strong>
+            <span th:each="role : ${user.roles}">
+                    <span class="roles" th:text="${role.name}">ROLE_USER</span>
+                </span>
+        </p>
+    </div>
 
+    <!-- Форма для выхода -->
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
 </body>
 </html>
