@@ -1,316 +1,71 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="ru">
+
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <title>Добро пожаловать</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-            margin: 20px;
-            background: white;
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            font-family: Arial, sans-serif;
             text-align: center;
-            animation: fadeIn 0.8s ease-in-out;
+            margin-top: 50px;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 36px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-
-        .feature {
-            flex: 1;
-            min-width: 120px;
-            padding: 15px;
-            background: #f8f9fa;
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid #ddd;
             border-radius: 10px;
-            transition: transform 0.3s;
+            background: #f9f9f9;
         }
-
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 30px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .feature-text {
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
         .btn {
             display: inline-block;
-            padding: 14px 40px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 10px 20px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
             margin: 5px;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .btn-login {
+            background: #007bff;
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-secondary {
+        .btn-logout {
             background: #6c757d;
             color: white;
         }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
+        .btn-profile {
             background: #28a745;
             color: white;
         }
-
-        .btn-success:hover {
-            background: #218838;
-            transform: translateY(-2px);
+        .btn-admin {
+            background: #ffc107;
+            color: black;
         }
-
-        .btn-group {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .security-badge {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 20px;
-        }
-
-        /* Стили для авторизованных пользователей */
         .user-greeting {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
             margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
         }
-
-        .user-greeting p {
-            color: #1565c0;
-            font-size: 16px;
-            margin: 0;
-        }
-
-        .username {
-            font-weight: 700;
-            color: #0d47a1;
-        }
-
-        .logout-form {
+        .inline-form {
             display: inline;
-        }
-
-        .btn-logout {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-logout:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .profile-link {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .profile-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .features {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .btn-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 250px;
-            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="logo">🔒</div>
+    <h1>🔒 Добро пожаловать!</h1>
+    <p>Приложение с разграничением доступа на основе ролей</p>
 
-    <h1>Welcome to Spring Security Demo</h1>
-
-    <p class="subtitle">
-        A secure application with role-based access control.
-        <br>
-        <small style="color: #999; font-size: 14px;">
-            Spring Boot · Spring Security · Thymeleaf
-        </small>
-    </p>
-
-    <!-- Блок для неавторизованных пользователей -->
     <div sec:authorize="!isAuthenticated()">
-        <div class="features">
-            <div class="feature">
-                <span class="feature-icon">🛡️</span>
-                <span class="feature-text">Secure Login</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">👤</span>
-                <span class="feature-text">User Dashboard</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">⚡</span>
-                <span class="feature-text">Admin Panel</span>
-            </div>
-        </div>
-
-        <div class="btn-group">
-            <a href="/login" class="btn btn-primary">🔐 Login</a>
-            <!-- Если у вас есть страница регистрации -->
-            <!-- <a href="/register" class="btn btn-success">📝 Register</a> -->
-        </div>
-
-        <div class="security-badge">
-            🔒 Secure Connection
-        </div>
+        <br/>
+        <a href="/login" class="btn btn-login">Войти</a>
     </div>
 
-    <!-- Блок для авторизованных пользователей -->
-    <div sec:authorize="isAuthenticated()">
-        <div class="user-greeting">
-            <p>
-                👋 Welcome back,
-                <span class="username" sec:authentication="name">User</span>!
-            </p>
-            <p style="font-size: 14px; color: #666; margin-top: 5px;">
-                You are logged in as:
-                <span sec:authentication="name">user</span>
-            </p>
-        </div>
-
-        <div class="features">
-            <div class="feature">
-                <span class="feature-icon">👤</span>
-                <span class="feature-text">
-                        <a href="/user" class="profile-link">My Profile</a>
-                    </span>
-            </div>
-            <div class="feature" sec:authorize="hasRole('ADMIN')">
-                <span class="feature-icon">⚙️</span>
-                <span class="feature-text">
-                        <a href="/admin" class="profile-link">Admin Panel</a>
-                    </span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">📊</span>
-                <span class="feature-text">Dashboard</span>
-            </div>
-        </div>
-
-        <div class="btn-group">
-            <a href="/user" class="btn btn-primary">👤 My Profile</a>
-            <a href="/admin" sec:authorize="hasRole('ADMIN')" class="btn btn-success">⚙️ Admin Panel</a>
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="btn btn-logout">🚪 Logout</button>
-            </form>
-        </div>
-    </div>
 </div>
 </body>
 </html>
