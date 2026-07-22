@@ -132,7 +132,7 @@
             <td>Роли:</td>
             <td>
                 <div class="checkbox-group">
-                    <div th:each="role : ${allRoles}">
+                    <div th:each="role : ${roles}">
                         <label>
                             <input type="checkbox"
                                    th:value="${role.id}"

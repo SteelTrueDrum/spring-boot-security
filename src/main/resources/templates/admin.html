@@ -104,14 +104,6 @@
     </div>
 </div>
 
-<div class="user-info" sec:authentication="principal">
-    <strong>Добро пожаловать, <span sec:authentication="name">User</span>!</strong>
-    <span>Роли:
-            <span sec:authorize="hasRole('ADMIN')" class="role-badge">ROLE_ADMIN</span>
-            <span sec:authorize="hasRole('USER')" class="role-badge">ROLE_USER</span>
-        </span>
-</div>
-
 <a th:href="@{/admin/new}" class="btn btn-add">Добавить нового пользователя</a>
 <br/><br/>
 
