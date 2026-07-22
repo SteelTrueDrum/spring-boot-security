@@ -78,11 +78,11 @@
             <td>Роли:</td>
             <td>
                 <div class="checkbox-group">
-                    <div th:each="role : ${allRoles}">
+                    <div th:each="role : ${roles}">
                         <label>
                             <input type="checkbox"
-                                   th:value="${role.id}"
-                                   th:field="*{roles}" />
+                                   name="roleIds"
+                                   th:value="${role.id}" />
                             <span th:text="${role.name}">ROLE_USER</span>
                         </label>
                     </div>
@@ -131,19 +131,18 @@
         <tr>
             <td>Роли:</td>
             <td>
-                <div class="checkbox-group">
-                    <div th:each="role : ${roles}">
-                        <label>
-                            <input type="checkbox"
-                                   th:value="${role.id}"
-                                   th:field="*{roles}" />
-                            <span th:text="${role.name}">ROLE_USER</span>
-                        </label>
-                    </div>
-                </div>
+                <th:block th:each="role : ${roles}">
+                    <label>
+<!--                        <input type="checkbox" name="roleIds" th:value="${role.id}" th:field="*{roles}"/>-->
+                        <input type="checkbox"
+                               name="roleIds"
+                               th:value="${role.id}"
+                               th:checked="${user.roles.contains(role)}" />
+                    </label>
+                    <label th:text="${role.name}"></label>
+                </th:block>
             </td>
         </tr>
-        <tr>
             <td colspan="2">
                 <button type="submit" class="btn btn-save">Обновить</button>
                 <a href="/admin" class="btn btn-cancel">Отмена</a>

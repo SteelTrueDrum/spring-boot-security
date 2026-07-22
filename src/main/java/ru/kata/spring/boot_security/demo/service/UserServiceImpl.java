@@ -33,9 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
+    public void saveUser(User user, Set<Long> roleIds) {
+
+        Set<Role> roles = getRolesByIds(roleIds);
+        user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.saveUser(user);
+
     }
 
     @Override
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user, Set<Long> roleIds) {
         User existingUser = getUserById(user.getId());
 
         existingUser.setFirstName(user.getFirstName());
@@ -61,23 +65,10 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        // КРИТИЧЕСКИ ВАЖНО: Очищаем старые роли
+        // Обновляем роли
+        Set<Role> roles = getRolesByIds(roleIds);
         existingUser.getRoles().clear();
-
-        // Обновляем роли с проверкой на null
-        if (user.getRoles() != null) {
-            Set<Role> managedRoles = new HashSet<>();
-            for (Role role : user.getRoles()) {
-                if (role != null && role.getId() != null) {
-                    // Загружаем роль из базы данных
-                    Role managedRole = roleService.getRoleById(role.getId());
-                    if (managedRole != null) {
-                        managedRoles.add(managedRole);
-                    }
-                }
-            }
-            existingUser.setRoles(managedRoles);
-        }
+        existingUser.getRoles().addAll(roles);
 
         userDao.updateUser(existingUser);
     }
@@ -90,5 +81,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    // Приватный метод для получения ролей по ID
+    private Set<Role> getRolesByIds(Set<Long> roleIds) {
+        Set<Role> roles = new HashSet<>();
+        if (roleIds != null && !roleIds.isEmpty()) {
+            for (Long roleId : roleIds) {
+                Role role = roleService.getRoleById(roleId);
+                if (role != null) {
+                    roles.add(role);
+                }
+            }
+        }
+        return roles;
+    }
 
 }

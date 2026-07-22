@@ -50,11 +50,8 @@ public class AdminController {
     @PostMapping("/new")
     public String saveUser(@ModelAttribute("user") User user,
                            @RequestParam(value = "roleIds", required = false) Set<Long> roleIds) {
-        if (roleIds != null && !roleIds.isEmpty()) {
-            Set<Role> roles = roleService.getRolesByIds(roleIds);
-            user.setRoles(roles);
-        }
-        userService.saveUser(user);
+
+        userService.saveUser(user, roleIds);
         return "redirect:/admin";
     }
 
@@ -64,11 +61,7 @@ public class AdminController {
                              @ModelAttribute("user") User user,
                              @RequestParam(value = "roleIds", required = false) Set<Long> roleIds) {
         user.setId(id);
-        if (roleIds != null && !roleIds.isEmpty()) {
-            Set<Role> roles = roleService.getRolesByIds(roleIds);
-            user.setRoles(roles);
-        }
-        userService.updateUser(user);
+        userService.updateUser(user, roleIds);
         return "redirect:/admin";
     }
 
